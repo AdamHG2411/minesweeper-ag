@@ -95,6 +95,14 @@ body {
             width: 20px;
             padding: 0;
             margin: 0;
+            text-align: center;
+            p {
+              font-size: 10px;
+              line-height: 10px;
+              margin: 5px 0;
+              font-weight: 800;
+              font-family: "Lucida Console", Monaco, monospace;
+            }
           }
           .square {
             background-image: url('../img/ms-square.png');
@@ -102,10 +110,12 @@ body {
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
+            border: .5px solid #444;
           }
           .zero {
             background-color: lightgrey;
             border: .5px solid #444;
+            color: lightgrey;
           }
           .one {
             background-color: lightgrey;

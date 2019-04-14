@@ -129,9 +129,102 @@ function placeMines() {
   }
   finalValues.push(values.slice(Math.max(firstSquareId,firstMine) - 1))
   values = finalValues[0].concat(finalValues[1],finalValues[2],finalValues[3],finalValues[4])
-  console.log(values.length)
-  console.log(values)
+
+
+
   setInterval(function() { time.innerHTML = parseInt(time.innerHTML, 10) + 1 }, 1000)
+}
+
+function checkNeighbors(input) {
+  let clicked = parseInt(input.getAttribute('id').substr(2),10)
+  console.log(values[clicked])
+  if (values[clicked] === 'mine') {
+    console.log('boom!')
+  } else {
+    let counter = 0;
+    if ((clicked >= numColumns) && (clicked % numColumns !== 1)) {
+      if ((values[clicked - numColumns - 1]) === "mine") {
+        counter += 1;
+      }
+    }
+    if (clicked >= numColumns) {
+      if ((values[clicked - numColumns]) === "mine") {
+        counter += 1;
+      }
+    }
+    if ((clicked >= numColumns) && (clicked % numColumns !== 0)) {
+      if ((values[clicked - numColumns + 1]) === "mine") {
+        counter += 1;
+      }
+    }
+    if (clicked % numColumns !== 1) {
+      if ((values[clicked - 1]) === "mine") {
+        counter += 1;
+      }
+    }
+    if (clicked % numColumns !== 0) {
+      if ((values[clicked + 1]) === "mine") {
+        counter += 1;
+      }
+    }
+    if ((clicked % numColumns !== 1) && (clicked <= ((numRows - 1) * numColumns))) {
+      if ((values[clicked + numColumns - 1]) === "mine") {
+        counter += 1;
+      }
+    }
+    if (clicked <= ((numRows - 1) * numColumns)) {
+      if ((values[clicked + numColumns]) === "mine") {
+        counter += 1;
+      }
+    }
+    if ((clicked <= ((numRows - 1) * numColumns)) && (clicked % numColumns !== 0)) {
+      if ((values[clicked + numColumns + 1]) === "mine") {
+        counter += 1;
+      }
+    }
+    console.log(counter)
+    let countVal = document.createElement('P')
+    input.appendChild(countVal)
+    switch (counter) {
+      case 0:
+        input.removeAttribute('class');
+        input.setAttribute('class','zero');
+        break;
+      case 1:
+        input.removeAttribute('class');
+        input.setAttribute('class','one');
+        break;
+      case 2:
+        input.removeAttribute('class');
+        input.setAttribute('class','two');
+        break;
+      case 3:
+        input.removeAttribute('class');
+        input.setAttribute('class','three');
+        break;
+      case 4:
+        input.removeAttribute('class');
+        input.setAttribute('class','four');
+        break;
+      case 5:
+        input.removeAttribute('class');
+        input.setAttribute('class','five');
+        break;
+      case 6:
+        input.removeAttribute('class');
+        input.setAttribute('class','six');
+        break;
+      case 7:
+        input.removeAttribute('class');
+        input.setAttribute('class','seven');
+        break;
+      case 8:
+        input.removeAttribute('class');
+        input.setAttribute('class','eight');
+        break;
+    }
+    countVal.innerHTML = counter;
+  }
 }
 
 function clear(evt) {
@@ -139,11 +232,13 @@ function clear(evt) {
   if (squaresCleared < 1) {
     firstSquare = evt.target
     placeMines()
+    checkNeighbors(evt.target)
     squaresCleared += 1;
   } else {
     squaresCleared += 1;
     evt.target.removeAttribute('class')
     evt.target.removeEventListener('click', clear)
+    checkNeighbors(evt.target)
   }
 }
 createBoard();
