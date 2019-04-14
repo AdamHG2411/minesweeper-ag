@@ -1,0 +1,94 @@
+//xs default
+body {
+  .wrapper {
+    display: grid;
+    grid-template-rows: auto auto auto;
+    grid-template-columns: 900px 300px;
+    margin: 0 auto;
+    width: 90%;
+    header {
+      grid-row: 1 / 2;
+      grid-column: 1 / 2;
+      display: flex;
+      flex-direction: column;
+      align-content: center;
+      justify-content: space-between;
+      width: 75%;
+      margin: 0 auto;
+      .scoring {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        .timer {
+          display: flex;
+          flex-direction: row;
+          #time-img {
+            width: 20px;
+            height: 20px;
+            border: 1px solid black;
+          }
+          #time {
+            border: 1px solid black;
+          }
+        }
+        .markers {
+          display: flex;
+          flex-direction: row;
+          #marker-img {
+            width: 20px;
+            height: 20px;
+            border: 1px solid black;
+          }
+          #marked {
+            border: 1px solid black;
+          }
+        }
+        .best-time {
+          display: flex;
+          flex-direction: row;
+          #record {
+            height: 20px;
+            width: 20px;
+            border: 1px solid black;
+          }
+          #record-time {
+            border: 1px solid black;
+          }
+        }
+      }
+    }
+    .gameboard {
+      grid-row: 2 / 3;
+      grid-column: 1 / 2;
+      //remove this later - 40 x 25 squares for testing
+      width: 800px;
+      height: 500px;
+      border: 1px solid black;
+      margin: 0 auto;
+      .rows {
+        border: 1px solid black;
+        height: 20px;
+        width: 800px;
+        margin: 0 auto;
+        padding: 0;
+      }
+    }
+    aside {
+      grid-row: 2 / 3;
+      grid-column: 2 / 3;
+      padding: 10px;
+    }
+    footer {
+      grid-row: 3 / 4;
+      grid-column: 2 / 3;
+      margin: 0 auto;
+      padding: 10px;
+    }
+  }
+}
+
+//sm >= 768
+
+//md >= 992
+
+//lg >=1200

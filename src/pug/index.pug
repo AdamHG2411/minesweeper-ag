@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(http-equiv="X-UA-Compatible", content="ie=edge")
+    title Minesweeper
+    link(rel="stylesheet" type="text/css" href="../sass/main.scss")
+    script(src="../js/main.js" defer)
+  body
+    .wrapper
+      header
+        h1 Minesweeper
+        .scoring
+          .timer
+            img#timer-img(src="#", alt="Seconds passed")
+            h2#time 00000
+          .markers
+            img#marker-img(src="#", alt="Markers placed")
+            h2#marked 00 / 00
+          .best-time
+            img#record(src="#", alt="Best Time")
+            h2#record-time 00000 seconds
+      main.gameboard
+        .rows
+      aside
+        .instructions
+          p Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum tenetur provident aliquam sunt fuga saepe dolor ratione praesentium expedita exercitationem modi esse quas est libero blanditiis sed eos accusamus eveniet, unde non quaerat eius accusantium nam! Obcaecati quia accusamus maxime esse nemo odio facere tempora eveniet voluptatem, sint eos quo ab minima, atque iusto quas culpa velit aliquam exercitationem laudantium.
+      footer
+        p Made by Adam Grider, ahgdigital.com
