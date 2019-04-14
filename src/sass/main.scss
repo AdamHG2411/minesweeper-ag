@@ -3,7 +3,7 @@ body {
   .wrapper {
     display: grid;
     grid-template-rows: auto auto auto;
-    grid-template-columns: 900px 300px;
+    grid-template-columns: auto 300px;
     margin: 0 auto;
     width: 90%;
     header {
@@ -15,44 +15,63 @@ body {
       justify-content: space-between;
       width: 75%;
       margin: 0 auto;
+      h1 {
+        text-align: center;
+      }
       .scoring {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        align-content: center;
         .timer {
           display: flex;
-          flex-direction: row;
-          #time-img {
+          flex-direction: column;
+          justify-content: center;
+          align-content: center;
+          margin: 0 auto;
+          #timer-img {
             width: 20px;
             height: 20px;
             border: 1px solid black;
+            margin: 0 auto;
           }
           #time {
             border: 1px solid black;
+            margin: 20px auto;
           }
         }
         .markers {
           display: flex;
-          flex-direction: row;
+          flex-direction: column;
+          justify-content: center;
+          align-content: center;
+          margin: 0 auto;
           #marker-img {
             width: 20px;
             height: 20px;
             border: 1px solid black;
+            margin: 0 auto;
           }
           #marked {
             border: 1px solid black;
+            margin: 20px auto;
           }
         }
         .best-time {
           display: flex;
-          flex-direction: row;
+          flex-direction: column;
+          justify-content: center;
+          align-content: center;
+          margin: 0 auto;
           #record {
             height: 20px;
             width: 20px;
             border: 1px solid black;
+            margin: 0 auto;
           }
           #record-time {
             border: 1px solid black;
+            margin: 20px auto;
           }
         }
       }
@@ -61,16 +80,83 @@ body {
       grid-row: 2 / 3;
       grid-column: 1 / 2;
       //remove this later - 40 x 25 squares for testing
-      width: 800px;
-      height: 500px;
-      border: 1px solid black;
       margin: 0 auto;
       .rows {
-        border: 1px solid black;
-        height: 20px;
-        width: 800px;
         margin: 0 auto;
         padding: 0;
+        display: flex;
+        flex-direction: column;
+        .row {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          .square {
+            height: 20px;
+            width: 20px;
+            padding: 0;
+            margin: 0;
+            background-image: url('../img/ms-square.png');
+            background-color: lightgreen;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+          }
+          .zero {
+            background-color: lightgrey;
+            border: .5px solid #444;
+          }
+          .one {
+            background-color: lightgrey;
+            border: .5px solid #444;
+            color: blue;
+          }
+          .two {
+            background-color: lightgrey;
+            border: .5px solid #444;
+            color: green;
+          }
+          .three {
+            background-color: lightgrey;
+            border: .5px solid #444;
+            color: red;
+          }
+          .four {
+            background-color: lightgrey;
+            border: .5px solid #444;
+            color: navy;
+          }
+          .five {
+            background-color: lightgrey;
+            border: .5px solid #444;
+            color: darkgreen;
+          }
+          .six {
+            background-color: lightgrey;
+            border: .5px solid #444;
+            color: darkred;
+          }
+          .seven {
+            background-color: lightgrey;
+            border: .5px solid #444;
+            color: indigo;
+          }
+          .eight {
+            background-color: lightgrey;
+            border: .5px solid #444;
+            color: black;
+          }
+          .mine {
+            background-color: orangered;
+            border: .5px solid #444;
+          }
+          .explosion {
+            background-color: orangered;
+          }
+          .aflame {
+            background-color: orange;
+            border: .5px solid #444;
+          }
+        }
       }
     }
     aside {
