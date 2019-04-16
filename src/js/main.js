@@ -102,6 +102,7 @@ function createBoard() {
       newSquare.setAttribute('class',`square`)
       newSquare.setAttribute('id', `sq${(i * numColumns) + j + 1}`)
       newSquare.addEventListener('click', clear)
+      newSquare.addEventListener('context-menu', placeMarker, false);
     }
   }
 }
@@ -347,7 +348,7 @@ function placeMarker(evt) {
   marked.removeAttribute('class')
   marked.setAttribute('class', 'mine-marker')
   markersPlaced += 1;
-  
+  return false;
 }
 
 //To do: explosion function
