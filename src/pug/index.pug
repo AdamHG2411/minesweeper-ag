@@ -16,16 +16,35 @@ html(lang="en")
             img#timer-img(src="../img/ms-square.png", alt="Seconds passed")
             h2#time ERR
           .markers
-            img#marker-img(src="../img/ms-square.png", alt="Markers placed")
-            h2#marked ERR / ERR
+            img#marker-img(src="../img/mine-marker.png", alt="Markers placed")
+            h2#marked 
+              a#markersPlaced ERR
+              a / 
+              a#numMarkers ERR
           .best-time
             img#record(src="../img/ms-square.png", alt="Best Time")
             h2#record-time ERR
       main.gameboard
         .rows
       aside
+        .setup
+          select#gridSelector(name="Size")
+            option(value="Small") Small
+            option(value="Medium") Medium
+            option(value="Large") Large
+            option(value="Custom") Custom
+          Button#reset Reset
+          #numRows
+            p Rows: 
+              a#numRowsText tbd
+            input#numRowsInput(type="text" placeholder="Rows")
+          #numColumns
+            p Columns: 
+              a#numColumnsText tbd
+            input#numColumnsInput(type="text" placeholder="Columns")
+          button#createCustom Create
         .instructions
           p Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum tenetur provident aliquam sunt fuga saepe dolor ratione praesentium expedita exercitationem modi esse quas est libero blanditiis sed eos accusamus eveniet, unde non quaerat eius accusantium nam! Obcaecati quia accusamus maxime esse nemo odio facere tempora eveniet voluptatem, sint eos quo ab minima, atque iusto quas culpa velit aliquam exercitationem laudantium.
       footer
-        p Made by Adam Grider, 
+        p Made by Adam Grider
           a(href="https://www.ahgdigital.com") ahgdigital.com

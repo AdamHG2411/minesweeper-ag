@@ -1,21 +1,94 @@
-//Global Variables
+//Global Variables & starting values
 let allRows = document.querySelector('.rows')
-let numRows = 25;
-let numColumns = 40;
+let numRows = 8;
+let numColumns = 8;
 let time = document.querySelector('#time')
 let squaresCleared = 0;
+let markersPlaced = document.querySelector('#markersPlaced')
+let numMarkers = document.querySelector('#numMarkers')
 let allMarkers = Math.floor(numRows * numColumns * 0.2)
+numMarkers.innerHTML = allMarkers
 let firstSquare;
 let values = [];
 let finalValues = [];
+let gridSelector = document.querySelector('#gridSelector')
+gridSelector.addEventListener('change',gridBuilder)
+let presetRows = document.querySelector('#numRowsText')
+presetRows.innerHTML = numRows;
+let customRows = document.querySelector('#numRowsInput')
+let presetColumns = document.querySelector('#numColumnsText')
+presetColumns.innerHTML = numColumns;
+let customColumns = document.querySelector('#numColumnsInput')
+let customButton = document.querySelector('#createCustom')
+let reset = document.querySelector('#reset')
+reset.addEventListener('click', resetBoard)
 
 //Functions:
-//To do: Set board size
-
+//Select grid size (custom still needs some debugging)
+function gridBuilder(evt) {
+  evt.preventDefault()
+  for (i = 0; i < numRows; i++) {
+    allRows.removeChild(allRows.firstChild)
+  }
+  switch (gridSelector.value) {
+    case 'Small':
+      presetRows.style.display = 'inline';
+      presetRows.innerHTML = '8'
+      presetColumns.style.display = 'inline';
+      presetColumns.innerHTML = '8'
+      customRows.style.display = 'none';
+      customColumns.style.display = 'none';
+      customButton.style.display = 'none';
+      numRows = 8;
+      numColumns = 8;
+      createBoard();
+      break;
+    case 'Medium':
+      presetRows.style.display = 'inline';
+      presetRows.innerHTML = '16'
+      presetColumns.style.display = 'inline';
+      presetColumns.innerHTML = '16';
+      customRows.style.display = 'none';
+      customColumns.style.display = 'none';
+      customButton.style.display = 'none';
+      numRows = 16;
+      numColumns = 16;
+      createBoard();
+      break;
+    case 'Large':
+      presetRows.style.display = 'inline';
+      presetRows.innerHTML = '24';
+      presetColumns.style.display = 'inline';
+      presetColumns.innerHTML = '24';
+      customRows.style.display = 'none';
+      customColumns.style.display = 'none';
+      customButton.style.display = 'none';
+      numRows = 24;
+      numColumns = 24;
+      createBoard();
+      break;
+    case 'Custom':
+      presetRows.style.display = 'none';
+      customRows.style.display = 'block';
+      presetColumns.style.display = 'none';
+      customColumns.style.display = 'block';
+      customButton.style.display = 'inline';
+      gridSelector.addEventListener('change', function() {
+        gridBuilder()
+      })
+      customButton.addEventListener('click', function(evt) {
+        evt.preventDefault()
+        numRows = customRows.value;
+        numColumns = customColumns.value;
+        createBoard();
+      })
+  }
+}
 
 //Setup gameboard
 function createBoard() {
   time.innerHTML = parseInt(0,10)
+  allMarkers = Math.floor(numRows * numColumns * 0.2)
   let marked = 0;
   let markedStr = document.querySelector('#marked')
   markedStr.innerHTML = `${marked} / ${allMarkers}`
@@ -31,6 +104,15 @@ function createBoard() {
       newSquare.addEventListener('click', clear)
     }
   }
+}
+
+//Reset with button
+function resetBoard(evt) {
+  evt.preventDefault();
+  for (i = 0; i < numRows; i++) {
+    allRows.removeChild(allRows.firstChild)
+  }
+  createBoard();
 }
 
 //Clear a square with left click
@@ -169,6 +251,8 @@ function checkNeighbors(input) {
   console.log(values[clicked])
   if (values[clicked] === 'mine') {
     console.log('boom!')
+    input.removeAttribute('class');
+    input.setAttribute('class','mine');
   } else {
     let counter = 0;
     if ((clicked >= numColumns) && (clicked % numColumns !== 1)) {
@@ -257,6 +341,15 @@ function checkNeighbors(input) {
 }
 
 //To do: place mine markers on right click
+function placeMarker(evt) {
+  evt.preventDefault()
+  let marked = evt.target
+  marked.removeAttribute('class')
+  marked.setAttribute('class', 'mine-marker')
+  markersPlaced += 1;
+}
+
+//To do: explosion function
 
 //This will ultimately be automated as part of the setup function
 createBoard();
