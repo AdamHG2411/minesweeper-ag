@@ -132,6 +132,11 @@ function clear(evt) {
   }
 }
 
+//Auto clear empty squares
+function clearEmpties() {
+  
+}
+
 //On first click, set mine locations
 function placeMines() {
   console.log(firstSquare)
