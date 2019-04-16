@@ -347,6 +347,7 @@ function placeMarker(evt) {
   marked.removeAttribute('class')
   marked.setAttribute('class', 'mine-marker')
   markersPlaced += 1;
+  
 }
 
 //To do: explosion function
