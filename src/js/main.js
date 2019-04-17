@@ -322,9 +322,9 @@ function clickAction(evt) {
 //Click handler function
 function clickHandler(evt) {
   evt.preventDefault();
-  if (indicatorArrow.class = 'clickReveal') {
+  if (indicatorArrow.classList.contains('clickReveal')) {
     clear(evt)
-  } else if (indicatorArrow.class = 'clickMark') {
+  } else if (indicatorArrow.classList.contains('clickMark')) {
     placeMarker(evt)
   } else {
     console.log('something is wrong')
