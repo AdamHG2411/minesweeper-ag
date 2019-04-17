@@ -144,77 +144,11 @@ function clear(evt) {
 function placeMines() {
   console.log(firstSquare)
   let firstSquareId = parseInt(firstSquare.getAttribute('id').substr(2),10)
-  firstSquare.removeAttribute('class')
-  let mineCount = allMarkers;
-  while (mineCount === allMarkers) {
-    let seedVal = Math.floor(Math.random() * 8)
-    switch(seedVal){
-      case 0:
-        if ((firstSquareId >= numColumns) && (firstSquareId % numColumns !== 1)) {
-          firstMine = (firstSquareId - numColumns - 1);
-          console.log('first mine is top left')
-          mineCount -= 1;
-        }
-        break;
-      case 1:
-        if (firstSquareId >= numColumns) {
-          firstMine = (firstSquareId - numColumns);
-          console.log('first mine is top center')
-          mineCount -= 1;
-        }
-        break;
-      case 2:
-        if ((firstSquareId >= numColumns) && (firstSquareId % numColumns !== 0)) {
-          firstMine = (firstSquareId - numColumns + 1);
-          console.log('first mine is top right')
-          mineCount -= 1;
-        }
-        break;
-      case 3:
-        if (firstSquareId % numColumns !== 1) {
-          firstMine = (firstSquareId - 1);
-          console.log('first mine is left center')
-          mineCount -= 1;
-        }
-        break;
-      case 4:
-        if (firstSquareId % numColumns !== 0) {
-          firstMine = (firstSquareId + 1);
-          console.log('first mine is right center')
-          mineCount -= 1;
-        }
-        break;
-      case 5:
-        if ((firstSquareId % numColumns !== 1) && (firstSquareId <= ((numRows - 1) * numColumns))) {
-          firstMine = (firstSquareId + numColumns - 1);
-          console.log('first mine is bottom left')
-          mineCount -= 1;
-        }
-        break;
-      case 6:
-        if (firstSquareId <= ((numRows - 1) * numColumns)) {
-          firstMine = (firstSquareId + numColumns);
-          console.log('first mine is bottom center')
-          mineCount -= 1;
-        }
-        break;
-      case 7 || 8:
-        if ((firstSquareId <= ((numRows - 1) * numColumns)) && (firstSquareId % numColumns !== 0)) {
-          firstMine = (firstSquareId + numColumns + 1);
-          console.log('first mine is bottom right')
-          mineCount -= 1;
-        }
-        break;
-      default:
-        console.log('a random number led to an invalid setup - trying again')
-    }
-  }
-  for (i = 1; i <= (allMarkers - 1); i++) {
+  for (i = 0; i < allMarkers; i++) {
     values.push("mine")
-    mineCount -= 1
   }
-  console.log(`The array has ${values.length} mines other than the first one`)
-  for (i = (allMarkers + 2); i <= (numColumns * numRows); i++) {
+  console.log(`The array has ${values.length} mines`)
+  for (i = 0; i < ((numColumns * numRows) - allMarkers - 1); i++) {
     values.push("tbd")
   }
   console.log(`The array has ${values.length} values`)
@@ -228,27 +162,14 @@ function placeMines() {
     values[currentIndex] = values[randomIndex];
     values[randomIndex] = temporaryValue;
   }
-  //push shuffled values to array and recombine, mixing in the first click ("tbd") and  first mine ("mine")
+  //push shuffled values to array and recombine, mixing in the first click
   console.log(`The first square clicked was ${firstSquareId}`)
-  console.log(`The first mine generated was ${firstMine}`)
-  console.log(values.slice(0,(Math.min(firstSquareId,firstMine) - 1)))
-  finalValues.push(values.slice(0,(Math.min(firstSquareId,firstMine) - 1)))
-  if (firstSquareId < firstMine) {
-    finalValues.push(["tbd"])
-} else {
-    finalValues.push(["mine"])
-}
-  console.log(values.slice((Math.min(firstSquareId,firstMine) - 1), (Math.max(firstSquareId, firstMine) - 2)))
-  finalValues.push(values.slice((Math.min(firstSquareId, firstMine) - 1), (Math.max(firstSquareId,firstMine) - 2)))
-  if (firstSquareId > firstMine) {
-    finalValues.push(["tbd"])
-  } else {
-    finalValues.push(["mine"])
-  }
-  console.log(values.slice((Math.max(firstSquareId, firstMine) - 2)))
-  finalValues.push(values.slice(Math.max(firstSquareId,firstMine) - 2))
-  values = finalValues[0].concat(finalValues[1],finalValues[2],finalValues[3],finalValues[4])
-  console.log(values)
+  console.log(values.slice(0,(firstSquareId - 1)))
+  finalValues.push(values.slice(0,(firstSquareId - 1)))
+  finalValues.push(["tbd"])
+  finalValues.push(values.slice((firstSquareId - 1)))
+  values = finalValues[0].concat(finalValues[1],finalValues[2])
+  console.log(values.length)
 
 //Start timer
   setInterval(function() { time.innerHTML = parseInt(time.innerHTML, 10) + 1 }, 1000)
