@@ -26,6 +26,11 @@ html(lang="en")
             h2#record-time ERR
       main.gameboard
         .rows
+      #clickActions
+        h3 On click:
+        img#reveal(src="../img/reveal-example.png" alt="reveal square on click")
+        img#marker(src="../img/marker-example.png" alt="place marker on click")
+        img.clickReveal#indicatorArrow(src="../img/arrow.png")
       aside
         .setup
           select#gridSelector(name="Size")

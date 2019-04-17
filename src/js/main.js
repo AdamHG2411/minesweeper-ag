@@ -22,6 +22,9 @@ let customColumns = document.querySelector('#numColumnsInput')
 let customButton = document.querySelector('#createCustom')
 let reset = document.querySelector('#reset')
 reset.addEventListener('click', resetBoard)
+let clickActions = document.querySelector('#clickActions')
+clickActions.addEventListener('click',clickAction)
+let indicatorArrow = document.querySelector('#indicatorArrow')
 
 //Functions:
 //Select grid size (custom still needs some debugging)
@@ -89,9 +92,9 @@ function gridBuilder(evt) {
 function createBoard() {
   time.innerHTML = parseInt(0,10)
   allMarkers = Math.floor(numRows * numColumns * 0.2)
-  let marked = 0;
+  markersPlaced = 0;
   let markedStr = document.querySelector('#marked')
-  markedStr.innerHTML = `${marked} / ${allMarkers}`
+  markedStr.innerHTML = `${markersPlaced} / ${allMarkers}`
   for (i = 0; i < numRows; i++) {
     let newRow = document.createElement('div')
     allRows.appendChild(newRow)
@@ -101,8 +104,8 @@ function createBoard() {
       newRow.appendChild(newSquare)
       newSquare.setAttribute('class',`square`)
       newSquare.setAttribute('id', `sq${(i * numColumns) + j + 1}`)
-      newSquare.addEventListener('click', clear)
-      newSquare.addEventListener('context-menu', placeMarker, false);
+      newSquare.addEventListener('click', clickHandler);
+
     }
   }
 }
@@ -132,10 +135,10 @@ function clear(evt) {
   }
 }
 
-//Auto clear empty squares
-function clearEmpties() {
+//To do: Auto clear empty squares
+// function clearEmpties() {
   
-}
+// }
 
 //On first click, set mine locations
 function placeMines() {
@@ -346,6 +349,32 @@ function checkNeighbors(input) {
   }
 }
 
+//Click Action Toggle
+function clickAction(evt) {
+  evt.preventDefault()
+  if (indicatorArrow.class = 'clickReveal') {
+    indicatorArrow.removeAttribute('class')
+    indicatorArrow.setAttribute('class','clickMark')
+  } else if (indicatorArrow.class = 'clickMark') {
+    indicatorArrow.removeAttribute('class')
+    indicatorArrow.setAttribute('class','clickReveal')
+  } else {
+    console.log('something is wrong')
+  }
+}
+
+//Click handler function
+function clickHandler(evt) {
+  evt.preventDefault();
+  if (indicatorArrow.class = 'clickReveal') {
+    clear(evt)
+  } else if (indicatorArrow.class = 'clickMark') {
+    placeMarker(evt)
+  } else {
+    console.log('something is wrong')
+  }
+}
+
 //To do: place mine markers on right click
 function placeMarker(evt) {
   evt.preventDefault()
@@ -353,7 +382,6 @@ function placeMarker(evt) {
   marked.removeAttribute('class')
   marked.setAttribute('class', 'mine-marker')
   markersPlaced += 1;
-  return false;
 }
 
 //To do: explosion function
