@@ -17,10 +17,7 @@ html(lang="en")
             h2#time ERR
           .markers
             img#marker-img(src="../img/mine-marker.png", alt="Markers placed")
-            h2#marked 
-              a#markersPlaced ERR
-              a / 
-              a#numMarkers ERR
+            h2#marked ERR
           .best-time
             img#record(src="../img/ms-square.png", alt="Best Time")
             h2#record-time ERR
@@ -34,7 +31,7 @@ html(lang="en")
       aside
         .setup
           select#gridSelector(name="Size")
-            option(value="Small") Small
+            option(value="Small" Default) Small
             option(value="Medium") Medium
             option(value="Large") Large
             option(value="Custom") Custom

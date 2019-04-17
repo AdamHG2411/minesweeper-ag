@@ -4,15 +4,14 @@ let numRows = 8;
 let numColumns = 8;
 let time = document.querySelector('#time')
 let squaresCleared = 0;
-let markersPlaced = document.querySelector('#markersPlaced')
-let numMarkers = document.querySelector('#numMarkers')
-let allMarkers = Math.floor(numRows * numColumns * 0.2)
-numMarkers.innerHTML = allMarkers
+let marked = document.querySelector('#marked')
+let markersPlaced = NaN;
+let allMarkers = NaN;
 let firstSquare;
 let values = [];
 let finalValues = [];
 let gridSelector = document.querySelector('#gridSelector')
-gridSelector.addEventListener('change',gridBuilder)
+gridSelector.addEventListener('change',createBoard)
 let presetRows = document.querySelector('#numRowsText')
 presetRows.innerHTML = numRows;
 let customRows = document.querySelector('#numRowsInput')
@@ -27,12 +26,17 @@ let clickActions = document.querySelector('#clickActions')
 clickActions.addEventListener('click',clickAction)
 
 //Functions:
-//Select grid size (custom still needs some debugging)
-function gridBuilder(evt) {
-  evt.preventDefault()
-  for (i = 0; i < numRows; i++) {
-    allRows.removeChild(allRows.firstChild)
+
+//Setup gameboard
+function createBoard() {
+  if (allRows.childElementCount > 0) {
+    for (i = 0; i < numRows; i++) {
+      allRows.removeChild(allRows.firstChild)
+    }
   }
+  values = [];
+  finalValues = [];
+  squaresCleared = 0;
   switch (gridSelector.value) {
     case 'Small':
       presetRows.style.display = 'inline';
@@ -44,7 +48,6 @@ function gridBuilder(evt) {
       customButton.style.display = 'none';
       numRows = 8;
       numColumns = 8;
-      createBoard();
       break;
     case 'Medium':
       presetRows.style.display = 'inline';
@@ -56,7 +59,6 @@ function gridBuilder(evt) {
       customButton.style.display = 'none';
       numRows = 16;
       numColumns = 16;
-      createBoard();
       break;
     case 'Large':
       presetRows.style.display = 'inline';
@@ -68,7 +70,6 @@ function gridBuilder(evt) {
       customButton.style.display = 'none';
       numRows = 24;
       numColumns = 24;
-      createBoard();
       break;
     case 'Custom':
       presetRows.style.display = 'none';
@@ -83,18 +84,14 @@ function gridBuilder(evt) {
         evt.preventDefault()
         numRows = customRows.value;
         numColumns = customColumns.value;
-        createBoard();
       })
   }
-}
-
-//Setup gameboard
-function createBoard() {
   time.innerHTML = parseInt(0,10)
   allMarkers = Math.floor(numRows * numColumns * 0.2)
+  console.log(allMarkers)
   markersPlaced = 0;
-  let markedStr = document.querySelector('#marked')
-  markedStr.innerHTML = `${markersPlaced} / ${allMarkers}`
+  console.log(markersPlaced)
+  marked.innerHTML = `${markersPlaced} / ${allMarkers}`
   for (i = 0; i < numRows; i++) {
     let newRow = document.createElement('div')
     allRows.appendChild(newRow)
@@ -113,9 +110,6 @@ function createBoard() {
 //Reset with button
 function resetBoard(evt) {
   evt.preventDefault();
-  for (i = 0; i < numRows; i++) {
-    allRows.removeChild(allRows.firstChild)
-  }
   createBoard();
 }
 
@@ -130,7 +124,7 @@ function clear(evt) {
   } else {
     squaresCleared += 1;
     evt.target.removeAttribute('class')
-    evt.target.removeEventListener('click', clear)
+    evt.target.removeEventListener('click',clickAction)
     checkNeighbors(evt.target)
   }
 }
@@ -207,7 +201,7 @@ function checkNeighbors(input) {
     input.setAttribute('class','mine');
   } else {
     let counter = 0;
-    if ((clicked >= numColumns) && (clicked % numColumns !== 1)) {
+    if ((clicked >= numColumns) && (clicked % numColumns !== 0)) {
       if ((values[clicked - numColumns - 1]) === "mine") {
         counter += 1;
       }
@@ -217,22 +211,22 @@ function checkNeighbors(input) {
         counter += 1;
       }
     }
-    if ((clicked >= numColumns) && (clicked % numColumns !== 0)) {
+    if ((clicked >= numColumns) && (clicked % numColumns !== (numColumns - 1))) {
       if ((values[clicked - numColumns + 1]) === "mine") {
         counter += 1;
       }
     }
-    if (clicked % numColumns !== 1) {
+    if (clicked % numColumns !== 0) {
       if ((values[clicked - 1]) === "mine") {
         counter += 1;
       }
     }
-    if (clicked % numColumns !== 0) {
+    if (clicked % numColumns !== (numColumns - 1)) {
       if ((values[clicked + 1]) === "mine") {
         counter += 1;
       }
     }
-    if ((clicked % numColumns !== 1) && (clicked <= ((numRows - 1) * numColumns))) {
+    if ((clicked % numColumns !== 0) && (clicked <= ((numRows - 1) * numColumns))) {
       if ((values[clicked + numColumns - 1]) === "mine") {
         counter += 1;
       }
@@ -242,7 +236,7 @@ function checkNeighbors(input) {
         counter += 1;
       }
     }
-    if ((clicked <= ((numRows - 1) * numColumns)) && (clicked % numColumns !== 0)) {
+    if ((clicked <= ((numRows - 1) * numColumns)) && (clicked % numColumns !== (numColumns - 1))) {
       if ((values[clicked + numColumns + 1]) === "mine") {
         counter += 1;
       }
