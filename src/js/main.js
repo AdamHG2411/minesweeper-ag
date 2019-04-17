@@ -163,10 +163,12 @@ function placeMines() {
   console.log(`The first square clicked was ${firstSquareId}`)
   console.log(values.slice(0,(firstSquareId - 1)))
   finalValues.push(values.slice(0,(firstSquareId - 1)))
+  console.log(finalValues[0].length)
   finalValues.push(["tbd"])
   finalValues.push(values.slice((firstSquareId - 1)))
   values = finalValues[0].concat(finalValues[1],finalValues[2])
   console.log(`The array has ${values.length} values`)
+  console.log(values)
   startTimer()
 }
 
