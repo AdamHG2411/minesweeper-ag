@@ -25,8 +25,8 @@ let indicatorArrow = document.querySelector('#indicatorArrow')
 indicatorArrow.setAttribute('class','clickReveal')
 let clickActions = document.querySelector('#clickActions')
 clickActions.addEventListener('click',clickAction)
-let timeStopped = false;
 let currentTime;
+let clearQueue = [];
 
 //Functions:
 //Setup gameboard
@@ -89,9 +89,7 @@ function createBoard() {
   }
   time.innerHTML = parseInt(0,10)
   allMarkers = Math.floor(numRows * numColumns * 0.2)
-  console.log(allMarkers)
   markersPlaced = 0;
-  console.log(markersPlaced)
   marked.innerHTML = `${markersPlaced} / ${allMarkers}`
   for (i = 0; i < numRows; i++) {
     let newRow = document.createElement('div')
@@ -126,46 +124,20 @@ function resetBoard(evt) {
 //Clear a square with left click
 function clear(evt) {
   evt.preventDefault();
+  let clickVal = parseInt(evt.target.id.substr(2),10)
+  clearQueue.push(clickVal)
   if (squaresCleared < 1) {
     firstSquare = evt.target
     placeMines()
-    checkNeighbors(evt.target)
+    checkNeighbors()
     squaresCleared += 1;
   } else {
     squaresCleared += 1;
     evt.target.removeAttribute('class')
     evt.target.removeEventListener('click',clickAction)
-    checkNeighbors(evt.target)
+    checkNeighbors()
   }
 }
-
-//To do: Auto clear empty squares - currently too much for chrome to process - debug
-// function clearEmpties(clicked) {
-//   if ((clicked >= numColumns) && (clicked % numColumns !== 0)) {
-//     checkNeighbors(document.querySelector(`#sq${clicked - numColumns - 1}`))
-//   }
-//   if (clicked >= numColumns) {
-//     checkNeighbors(document.querySelector(`#sq${clicked - numColumns}`))
-//   }
-//   if ((clicked >= numColumns) && (clicked % numColumns !== (numColumns - 1))) {
-//     checkNeighbors(document.querySelector(`#sq${clicked - numColumns + 1}`))
-//   }
-//   if (clicked % numColumns !== 0) {
-//     checkNeighbors(document.querySelector(`#sq${clicked - 1}`))
-//   }
-//   if (clicked % numColumns !== (numColumns - 1)) {
-//     checkNeighbors(document.querySelector(`#sq${clicked + 1}`))
-//   }
-//   if ((clicked % numColumns !== 0) && (clicked <= ((numRows - 1) * numColumns))) {
-//     checkNeighbors(document.querySelector(`#sq${clicked + numColumns - 1}`))
-//   }
-//   if (clicked <= ((numRows - 1) * numColumns)) {
-//     checkNeighbors(document.querySelector(`#sq${clicked + numColumns}`))
-//   }
-//   if ((clicked <= ((numRows - 1) * numColumns)) && (clicked % numColumns !== (numColumns - 1))) {
-//     checkNeighbors(document.querySelector(`#sq${clicked + numColumns + 1}`))
-//   }
-// }
 
 //On first square clicked, set mine locations
 function placeMines() {
@@ -178,8 +150,6 @@ function placeMines() {
   for (i = 0; i < ((numColumns * numRows) - allMarkers - 1); i++) {
     values.push("tbd")
   }
-  console.log(`The array has ${values.length} values`)
-
   //shuffle the array
   let currentIndex = values.length, temporaryValue, randomIndex;
   while (0 !== currentIndex) {
@@ -196,115 +166,150 @@ function placeMines() {
   finalValues.push(["tbd"])
   finalValues.push(values.slice((firstSquareId - 1)))
   values = finalValues[0].concat(finalValues[1],finalValues[2])
-  console.log(values.length)
+  console.log(`The array has ${values.length} values`)
   startTimer()
 }
 
 //count the mines around any clicked square
-function checkNeighbors(input) {
-  let clicked = (parseInt(input.getAttribute('id').substr(2),10) - 1)
-  console.log(values[clicked])
-  if (values[clicked] === 'mine') {
+function checkNeighbors() {
+  let clickVal = clearQueue[0]
+  console.log(clickVal)
+  let clicked = document.querySelector(`#sq${clickVal}`)
+  if (values[clickVal] === 'mine') {
     console.log('boom!')
     stopTimer();
-    input.removeAttribute('class');
-    input.setAttribute('class','mine');
+    clicked.removeAttribute('class');
+    clicked.setAttribute('class','mine');
   } else {
     let counter = 0;
-    if ((clicked >= numColumns) && (clicked % numColumns !== 0)) {
-      if ((values[clicked - numColumns - 1]) === "mine") {
+    if ((clickVal >= numColumns) && (clickVal % numColumns !== 1)) {
+      if ((values[clickVal - numColumns - 1]) === "mine") {
         counter += 1;
       }
     }
-    if (clicked >= numColumns) {
-      if ((values[clicked - numColumns]) === "mine") {
+    if (clickVal >= numColumns) {
+      if ((values[clickVal - numColumns]) === "mine") {
         counter += 1;
       }
     }
-    if ((clicked >= numColumns) && (clicked % numColumns !== (numColumns - 1))) {
-      if ((values[clicked - numColumns + 1]) === "mine") {
+    if ((clickVal >= numColumns) && (clickVal % numColumns !== 0)) {
+      if ((values[clickVal - numColumns + 1]) === "mine") {
         counter += 1;
       }
     }
-    if (clicked % numColumns !== 0) {
-      if ((values[clicked - 1]) === "mine") {
+    if (clickVal % numColumns !== 1) {
+      if ((values[clickVal - 1]) === "mine") {
         counter += 1;
       }
     }
-    if (clicked % numColumns !== (numColumns - 1)) {
-      if ((values[clicked + 1]) === "mine") {
+    if (clickVal % numColumns !== 0) {
+      if ((values[clickVal + 1]) === "mine") {
         counter += 1;
       }
     }
-    if ((clicked % numColumns !== 0) && (clicked <= ((numRows - 1) * numColumns))) {
-      if ((values[clicked + numColumns - 1]) === "mine") {
+    if ((clickVal % numColumns !== 1) && (clickVal <= ((numRows - 1) * numColumns))) {
+      if ((values[clickVal + numColumns - 1]) === "mine") {
         counter += 1;
       }
     }
-    if (clicked <= ((numRows - 1) * numColumns)) {
-      if ((values[clicked + numColumns]) === "mine") {
+    if (clickVal <= ((numRows - 1) * numColumns)) {
+      if ((values[clickVal + numColumns]) === "mine") {
         counter += 1;
       }
     }
-    if ((clicked <= ((numRows - 1) * numColumns)) && (clicked % numColumns !== (numColumns - 1))) {
-      if ((values[clicked + numColumns + 1]) === "mine") {
+    if ((clickVal <= ((numRows - 1) * numColumns)) && (clickVal % numColumns !== 0)) {
+      if ((values[clickVal + numColumns + 1]) === "mine") {
         counter += 1;
       }
     }
-    console.log(counter)
-    let countVal = document.createElement('P')
-    input.appendChild(countVal)
+    console.log(`Square ${clickVal} has ${counter} mines around it`)
+    let countText = document.createElement('P')
+    clicked.appendChild(countText)
     switch (counter) {
       case 0:
-        input.removeAttribute('class');
-        input.setAttribute('class','zero');
-
-        //clearEmpties(clicked);
+        if ((clickVal >= numColumns) && (clickVal % numColumns !== 1)) {
+          clearQueue.push(clickVal - numColumns - 1)
+        }
+        if (clickVal >= numColumns) {
+          clearQueue.push(clickVal - numColumns)
+        }
+        if ((clickVal >= numColumns) && (clickVal % numColumns !== 0)) {
+          clearQueue.push(clickVal - numColumns + 1)
+        }
+        if (clickVal % numColumns !== 1) {
+          clearQueue.push(clickVal - 1)
+        }
+        if (clickVal % numColumns !== 0) {
+          clearQueue.push(clickVal + 1)
+        }
+        if ((clickVal % numColumns !== 1) && (clickVal <= ((numRows - 1) * numColumns))) {
+          clearQueue.push(clickVal + numColumns - 1)
+        }
+        if (clickVal <= ((numRows - 1) * numColumns)) {
+          clearQueue.push(clickVal + numColumns)
+        }
+        if ((clickVal <= ((numRows - 1) * numColumns)) && (clickVal % numColumns !== 0)) {
+          clearQueue.push(clickVal + numColumns + 1)
+        }
+        clicked.removeAttribute('class');
+        clicked.setAttribute('class','zero');
         break;
       case 1:
-        input.removeAttribute('class');
-        input.setAttribute('class','one');
+        clicked.removeAttribute('class');
+        clicked.setAttribute('class','one');
         break;
       case 2:
-        input.removeAttribute('class');
-        input.setAttribute('class','two');
+        clicked.removeAttribute('class');
+        clicked.setAttribute('class','two');
         break;
       case 3:
-        input.removeAttribute('class');
-        input.setAttribute('class','three');
+        clicked.removeAttribute('class');
+        clicked.setAttribute('class','three');
         break;
       case 4:
-        input.removeAttribute('class');
-        input.setAttribute('class','four');
+        clicked.removeAttribute('class');
+        clicked.setAttribute('class','four');
         break;
       case 5:
-        input.removeAttribute('class');
-        input.setAttribute('class','five');
+        clicked.removeAttribute('class');
+        clicked.setAttribute('class','five');
         break;
       case 6:
-        input.removeAttribute('class');
-        input.setAttribute('class','six');
+        clicked.removeAttribute('class');
+        clicked.setAttribute('class','six');
         break;
       case 7:
-        input.removeAttribute('class');
-        input.setAttribute('class','seven');
+        clicked.removeAttribute('class');
+        clicked.setAttribute('class','seven');
         break;
       case 8:
-        input.removeAttribute('class');
-        input.setAttribute('class','eight');
+        clicked.removeAttribute('class');
+        clicked.setAttribute('class','eight');
         break;
     }
-    countVal.innerHTML = counter;
+    countText.innerHTML = counter;
+  }
+  clearQueue.shift()
+  console.log(clearQueue)
+  while (clearQueue.length > 0) {
+    let nextSquare = document.querySelector(`#sq${clearQueue[0]}`)
+    while (nextSquare.classList.contains('square') == false) {
+      clearQueue.shift();
+      nextSquare = document.querySelector(`#sq${clearQueue[0]}`)
+    }
+    if (clearQueue.length > 0) {
+      checkNeighbors();
+    }
   }
 }
 
 //Click Action Toggle
 function clickAction(evt) {
   evt.preventDefault()
-  if (indicatorArrow.class = 'clickReveal') {
+  if (indicatorArrow.classList.contains('clickReveal')) {
     indicatorArrow.removeAttribute('class')
     indicatorArrow.setAttribute('class','clickMark')
-  } else if (indicatorArrow.class = 'clickMark') {
+  } else if (indicatorArrow.classList.contains('clickMark')) {
     indicatorArrow.removeAttribute('class')
     indicatorArrow.setAttribute('class','clickReveal')
   } else {
