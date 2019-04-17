@@ -22,11 +22,13 @@ let customButton = document.querySelector('#createCustom')
 let reset = document.querySelector('#reset')
 reset.addEventListener('click', resetBoard)
 let indicatorArrow = document.querySelector('#indicatorArrow')
+indicatorArrow.setAttribute('class','clickReveal')
 let clickActions = document.querySelector('#clickActions')
 clickActions.addEventListener('click',clickAction)
+let timeStopped = false;
+let currentTime;
 
 //Functions:
-
 //Setup gameboard
 function createBoard() {
   if (allRows.childElementCount > 0) {
@@ -72,14 +74,13 @@ function createBoard() {
       numColumns = 24;
       break;
     case 'Custom':
+    //To do: Custom sizing not working quite right anymore
       presetRows.style.display = 'none';
       customRows.style.display = 'block';
       presetColumns.style.display = 'none';
       customColumns.style.display = 'block';
       customButton.style.display = 'inline';
-      gridSelector.addEventListener('change', function() {
-        gridBuilder()
-      })
+      gridSelector.addEventListener('change', createBoard)
       customButton.addEventListener('click', function(evt) {
         evt.preventDefault()
         numRows = customRows.value;
@@ -107,6 +108,15 @@ function createBoard() {
   }
 }
 
+//Start/Stop timer
+function startTimer() {
+  time.innerHTML = 0
+  currentTime = setInterval(function() { time.innerHTML = parseInt(time.innerHTML, 10) + 1 }, 1000)
+}
+function stopTimer() {
+  clearInterval(currentTime)
+}
+
 //Reset with button
 function resetBoard(evt) {
   evt.preventDefault();
@@ -131,32 +141,33 @@ function clear(evt) {
 
 //To do: Auto clear empty squares - currently too much for chrome to process - debug
 // function clearEmpties(clicked) {
-//   if ((clicked >= numColumns) && (clicked % numColumns !== 1)) {
+//   if ((clicked >= numColumns) && (clicked % numColumns !== 0)) {
 //     checkNeighbors(document.querySelector(`#sq${clicked - numColumns - 1}`))
 //   }
 //   if (clicked >= numColumns) {
 //     checkNeighbors(document.querySelector(`#sq${clicked - numColumns}`))
 //   }
-//   if ((clicked >= numColumns) && (clicked % numColumns !== 0)) {
+//   if ((clicked >= numColumns) && (clicked % numColumns !== (numColumns - 1))) {
 //     checkNeighbors(document.querySelector(`#sq${clicked - numColumns + 1}`))
 //   }
-//   if (clicked % numColumns !== 1) {
+//   if (clicked % numColumns !== 0) {
 //     checkNeighbors(document.querySelector(`#sq${clicked - 1}`))
 //   }
-//   if (clicked % numColumns !== 0) {
+//   if (clicked % numColumns !== (numColumns - 1)) {
 //     checkNeighbors(document.querySelector(`#sq${clicked + 1}`))
 //   }
-//   if ((clicked % numColumns !== 1) && (clicked <= ((numRows - 1) * numColumns))) {
+//   if ((clicked % numColumns !== 0) && (clicked <= ((numRows - 1) * numColumns))) {
 //     checkNeighbors(document.querySelector(`#sq${clicked + numColumns - 1}`))
 //   }
 //   if (clicked <= ((numRows - 1) * numColumns)) {
 //     checkNeighbors(document.querySelector(`#sq${clicked + numColumns}`))
 //   }
-//   if ((clicked <= ((numRows - 1) * numColumns)) && (clicked % numColumns !== 0)) {
+//   if ((clicked <= ((numRows - 1) * numColumns)) && (clicked % numColumns !== (numColumns - 1))) {
 //     checkNeighbors(document.querySelector(`#sq${clicked + numColumns + 1}`))
 //   }
 // }
-//On first click, set mine locations
+
+//On first square clicked, set mine locations
 function placeMines() {
   console.log(firstSquare)
   let firstSquareId = parseInt(firstSquare.getAttribute('id').substr(2),10)
@@ -186,9 +197,7 @@ function placeMines() {
   finalValues.push(values.slice((firstSquareId - 1)))
   values = finalValues[0].concat(finalValues[1],finalValues[2])
   console.log(values.length)
-
-//Start timer
-  setInterval(function() { time.innerHTML = parseInt(time.innerHTML, 10) + 1 }, 1000)
+  startTimer()
 }
 
 //count the mines around any clicked square
@@ -197,6 +206,7 @@ function checkNeighbors(input) {
   console.log(values[clicked])
   if (values[clicked] === 'mine') {
     console.log('boom!')
+    stopTimer();
     input.removeAttribute('class');
     input.setAttribute('class','mine');
   } else {
