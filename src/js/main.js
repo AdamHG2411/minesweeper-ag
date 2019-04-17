@@ -22,9 +22,9 @@ let customColumns = document.querySelector('#numColumnsInput')
 let customButton = document.querySelector('#createCustom')
 let reset = document.querySelector('#reset')
 reset.addEventListener('click', resetBoard)
+let indicatorArrow = document.querySelector('#indicatorArrow')
 let clickActions = document.querySelector('#clickActions')
 clickActions.addEventListener('click',clickAction)
-let indicatorArrow = document.querySelector('#indicatorArrow')
 
 //Functions:
 //Select grid size (custom still needs some debugging)
@@ -199,7 +199,7 @@ function placeMines() {
 
 //count the mines around any clicked square
 function checkNeighbors(input) {
-  let clicked = parseInt(input.getAttribute('id').substr(2),10)
+  let clicked = (parseInt(input.getAttribute('id').substr(2),10) - 1)
   console.log(values[clicked])
   if (values[clicked] === 'mine') {
     console.log('boom!')
@@ -254,6 +254,7 @@ function checkNeighbors(input) {
       case 0:
         input.removeAttribute('class');
         input.setAttribute('class','zero');
+
         //clearEmpties(clicked);
         break;
       case 1:
