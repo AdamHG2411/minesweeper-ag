@@ -135,11 +135,33 @@ function clear(evt) {
   }
 }
 
-//To do: Auto clear empty squares
-// function clearEmpties() {
-  
+//To do: Auto clear empty squares - currently too much for chrome to process - debug
+// function clearEmpties(clicked) {
+//   if ((clicked >= numColumns) && (clicked % numColumns !== 1)) {
+//     checkNeighbors(document.querySelector(`#sq${clicked - numColumns - 1}`))
+//   }
+//   if (clicked >= numColumns) {
+//     checkNeighbors(document.querySelector(`#sq${clicked - numColumns}`))
+//   }
+//   if ((clicked >= numColumns) && (clicked % numColumns !== 0)) {
+//     checkNeighbors(document.querySelector(`#sq${clicked - numColumns + 1}`))
+//   }
+//   if (clicked % numColumns !== 1) {
+//     checkNeighbors(document.querySelector(`#sq${clicked - 1}`))
+//   }
+//   if (clicked % numColumns !== 0) {
+//     checkNeighbors(document.querySelector(`#sq${clicked + 1}`))
+//   }
+//   if ((clicked % numColumns !== 1) && (clicked <= ((numRows - 1) * numColumns))) {
+//     checkNeighbors(document.querySelector(`#sq${clicked + numColumns - 1}`))
+//   }
+//   if (clicked <= ((numRows - 1) * numColumns)) {
+//     checkNeighbors(document.querySelector(`#sq${clicked + numColumns}`))
+//   }
+//   if ((clicked <= ((numRows - 1) * numColumns)) && (clicked % numColumns !== 0)) {
+//     checkNeighbors(document.querySelector(`#sq${clicked + numColumns + 1}`))
+//   }
 // }
-
 //On first click, set mine locations
 function placeMines() {
   console.log(firstSquare)
@@ -232,6 +254,7 @@ function checkNeighbors(input) {
       case 0:
         input.removeAttribute('class');
         input.setAttribute('class','zero');
+        //clearEmpties(clicked);
         break;
       case 1:
         input.removeAttribute('class');
