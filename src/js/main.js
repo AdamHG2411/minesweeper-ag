@@ -3,6 +3,11 @@ let allRows = document.querySelector('.rows')
 let numRows = 8;
 let numColumns = 8;
 let time = document.querySelector('#time')
+let recordTime = document.querySelector('#record-time')
+recordTime.innerHTML = 'none';
+if (localStorage.getItem("highscore") !== null) {
+  recordTime.innerHTML = localStorage.getItem("highscore")
+}
 let squaresCleared = 0;
 let numMarked = document.querySelector('#marked')
 let markersPlaced = NaN;
@@ -358,6 +363,10 @@ function placeMarker(evt) {
 
       if (document.querySelector('.mine') == null) {
         console.log("Congratulations! You win!")
+        if ((time.innerhtml === "none") || (time.innerHTML < localStorage.getItem("highscore"))) {
+          localStorage.setItem("highscore", time.innerHTML)
+        }
+        recordTime.innerHTML = localStorage.getItem("highscore")
       }
     }, 300)
 
