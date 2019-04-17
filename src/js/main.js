@@ -4,7 +4,7 @@ let numRows = 8;
 let numColumns = 8;
 let time = document.querySelector('#time')
 let squaresCleared = 0;
-let marked = document.querySelector('#marked')
+let numMarked = document.querySelector('#marked')
 let markersPlaced = NaN;
 let allMarkers = NaN;
 let firstSquare;
@@ -31,10 +31,11 @@ let clearQueue = [];
 //Functions:
 //Setup gameboard
 function createBoard() {
-  if (allRows.childElementCount > 0) {
-    for (i = 0; i < numRows; i++) {
-      allRows.removeChild(allRows.firstChild)
+  while (allRows.firstChild) {
+    while (allRows.firstChild.firstChild) {
+      allRows.firstChild.removeChild(allRows.firstChild.firstChild)
     }
+    allRows.removeChild(allRows.firstChild)
   }
   values = [];
   finalValues = [];
@@ -74,7 +75,7 @@ function createBoard() {
       numColumns = 24;
       break;
     case 'Custom':
-    //To do: Custom sizing not working quite right anymore
+    //To do: Custom sizing not working via customButton; only resetButton
       presetRows.style.display = 'none';
       customRows.style.display = 'block';
       presetColumns.style.display = 'none';
@@ -90,11 +91,12 @@ function createBoard() {
   time.innerHTML = parseInt(0,10)
   allMarkers = Math.floor(numRows * numColumns * 0.2)
   markersPlaced = 0;
-  marked.innerHTML = `${markersPlaced} / ${allMarkers}`
+  numMarked.innerHTML = `${markersPlaced} / ${allMarkers}`
   for (i = 0; i < numRows; i++) {
     let newRow = document.createElement('div')
     allRows.appendChild(newRow)
-    newRow.setAttribute('class',`row row-${i + 1}`)
+    newRow.setAttribute('class', 'row')
+    newRow.setAttribute('id',`row-${i + 1}`)
     for (j = 0; j < numColumns; j++) {
       let newSquare = document.createElement('div')
       newRow.appendChild(newSquare)
@@ -118,6 +120,7 @@ function stopTimer() {
 //Reset with button
 function resetBoard(evt) {
   evt.preventDefault();
+  stopTimer();
   createBoard();
 }
 
@@ -174,9 +177,10 @@ function placeMines() {
 
 //count the mines around any clicked square
 function checkNeighbors() {
-  let clickVal = clearQueue[0]
-  console.log(clickVal)
-  let clicked = document.querySelector(`#sq${clickVal}`)
+  let clickId = clearQueue[0]
+  let clickVal = clickId - 1
+  console.log(clickId)
+  let clicked = document.querySelector(`#sq${clickId}`)
   if (values[clickVal] === 'mine') {
     console.log('boom!')
     stopTimer();
@@ -184,74 +188,74 @@ function checkNeighbors() {
     clicked.setAttribute('class','mine');
   } else {
     let counter = 0;
-    if ((clickVal >= numColumns) && (clickVal % numColumns !== 1)) {
+    if ((clickId >= numColumns) && (clickId % numColumns !== 1)) {
       if ((values[clickVal - numColumns - 1]) === "mine") {
         counter += 1;
       }
     }
-    if (clickVal >= numColumns) {
+    if (clickId >= numColumns) {
       if ((values[clickVal - numColumns]) === "mine") {
         counter += 1;
       }
     }
-    if ((clickVal >= numColumns) && (clickVal % numColumns !== 0)) {
+    if ((clickId >= numColumns) && (clickId % numColumns !== 0)) {
       if ((values[clickVal - numColumns + 1]) === "mine") {
         counter += 1;
       }
     }
-    if (clickVal % numColumns !== 1) {
+    if (clickId % numColumns !== 1) {
       if ((values[clickVal - 1]) === "mine") {
         counter += 1;
       }
     }
-    if (clickVal % numColumns !== 0) {
+    if (clickId % numColumns !== 0) {
       if ((values[clickVal + 1]) === "mine") {
         counter += 1;
       }
     }
-    if ((clickVal % numColumns !== 1) && (clickVal <= ((numRows - 1) * numColumns))) {
+    if ((clickId % numColumns !== 1) && (clickId <= ((numRows - 1) * numColumns))) {
       if ((values[clickVal + numColumns - 1]) === "mine") {
         counter += 1;
       }
     }
-    if (clickVal <= ((numRows - 1) * numColumns)) {
+    if (clickId <= ((numRows - 1) * numColumns)) {
       if ((values[clickVal + numColumns]) === "mine") {
         counter += 1;
       }
     }
-    if ((clickVal <= ((numRows - 1) * numColumns)) && (clickVal % numColumns !== 0)) {
+    if ((clickId <= ((numRows - 1) * numColumns)) && (clickId % numColumns !== 0)) {
       if ((values[clickVal + numColumns + 1]) === "mine") {
         counter += 1;
       }
     }
-    console.log(`Square ${clickVal} has ${counter} mines around it`)
+    console.log(`Square ${clickId} has ${counter} mines around it`)
     let countText = document.createElement('P')
     clicked.appendChild(countText)
     switch (counter) {
       case 0:
-        if ((clickVal >= numColumns) && (clickVal % numColumns !== 1)) {
-          clearQueue.push(clickVal - numColumns - 1)
+        if ((clickId >= numColumns) && (clickId % numColumns !== 1)) {
+          clearQueue.push(clickId - numColumns - 1)
         }
-        if (clickVal >= numColumns) {
-          clearQueue.push(clickVal - numColumns)
+        if (clickId >= numColumns) {
+          clearQueue.push(clickId - numColumns)
         }
-        if ((clickVal >= numColumns) && (clickVal % numColumns !== 0)) {
-          clearQueue.push(clickVal - numColumns + 1)
+        if ((clickId >= numColumns) && (clickId % numColumns !== 0)) {
+          clearQueue.push(clickId - numColumns + 1)
         }
-        if (clickVal % numColumns !== 1) {
-          clearQueue.push(clickVal - 1)
+        if (clickId % numColumns !== 1) {
+          clearQueue.push(clickId - 1)
         }
-        if (clickVal % numColumns !== 0) {
+        if (clickId % numColumns !== 0) {
           clearQueue.push(clickVal + 1)
         }
-        if ((clickVal % numColumns !== 1) && (clickVal <= ((numRows - 1) * numColumns))) {
-          clearQueue.push(clickVal + numColumns - 1)
+        if ((clickId % numColumns !== 1) && (clickId <= ((numRows - 1) * numColumns))) {
+          clearQueue.push(clickId + numColumns - 1)
         }
-        if (clickVal <= ((numRows - 1) * numColumns)) {
-          clearQueue.push(clickVal + numColumns)
+        if (clickId <= ((numRows - 1) * numColumns)) {
+          clearQueue.push(clickId + numColumns)
         }
-        if ((clickVal <= ((numRows - 1) * numColumns)) && (clickVal % numColumns !== 0)) {
-          clearQueue.push(clickVal + numColumns + 1)
+        if ((clickId <= ((numRows - 1) * numColumns)) && (clickId % numColumns !== 0)) {
+          clearQueue.push(clickId + numColumns + 1)
         }
         clicked.removeAttribute('class');
         clicked.setAttribute('class','zero');
@@ -334,10 +338,30 @@ function clickHandler(evt) {
 //To do: place mine markers on right click
 function placeMarker(evt) {
   evt.preventDefault()
-  let marked = evt.target
-  marked.removeAttribute('class')
-  marked.setAttribute('class', 'mine-marker')
+  let squareMarked = evt.target
+  squareMarked.removeAttribute('class')
+  squareMarked.setAttribute('class', 'mine-marker')
   markersPlaced += 1;
+  numMarked.innerHTML = `${markersPlaced} / ${allMarkers}`
+  if (markersPlaced === allMarkers) {
+    stopTimer()
+    setTimeout(function() {
+      for (i = 0; i < (numRows * numColumns); i++) {
+        if (document.querySelector(`#sq${i + 1}`).classList.contains('square')) {
+          clearQueue.push(i+1)
+          checkNeighbors()
+          if (document.querySelector(`#sq${i + 1}`).classList.contains('mine')) {
+            console.log("You didn't find all the mines. Better luck next time!")
+          }
+        }
+      }
+
+      if (document.querySelector('.mine') == null) {
+        console.log("Congratulations! You win!")
+      }
+    }, 300)
+
+  }
 }
 
 //To do: explosion function
