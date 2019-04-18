@@ -252,7 +252,7 @@ function checkNeighbors() {
           clearQueue.push(clickId - 1)
         }
         if (clickId % numColumns !== 0) {
-          clearQueue.push(clickVal + 1)
+          clearQueue.push(clickId + 1)
         }
         if ((clickId % numColumns !== 1) && (clickId <= ((numRows - 1) * numColumns))) {
           clearQueue.push(clickId + numColumns - 1)
@@ -344,38 +344,40 @@ function clickHandler(evt) {
 //To do: place mine markers on right click
 function placeMarker(evt) {
   evt.preventDefault()
-  let squareMarked = evt.target
-  if (squareMarked.classList.contains('square')) {
-    squareMarked.removeAttribute('class')
-    squareMarked.setAttribute('class', 'mine-marker')
-    markersPlaced += 1;
-    numMarked.innerHTML = `${markersPlaced} / ${allMarkers}`
-    if (markersPlaced === allMarkers) {
-      stopTimer()
-      setTimeout(function() {
-        for (i = 0; i < (numRows * numColumns); i++) {
-          if (document.querySelector(`#sq${i + 1}`).classList.contains('square')) {
-            clearQueue.push(i+1)
-            checkNeighbors()
+  if (squaresCleared > 0) {
+    let squareMarked = evt.target
+    if (squareMarked.classList.contains('square')) {
+      squareMarked.removeAttribute('class')
+      squareMarked.setAttribute('class', 'mine-marker')
+      markersPlaced += 1;
+      numMarked.innerHTML = `${markersPlaced} / ${allMarkers}`
+      if (markersPlaced === allMarkers) {
+        stopTimer()
+        setTimeout(function() {
+          for (i = 0; i < (numRows * numColumns); i++) {
+            if (document.querySelector(`#sq${i + 1}`).classList.contains('square')) {
+              clearQueue.push(i+1)
+              checkNeighbors()
+            }
           }
-        }
-  
-        if (document.querySelector('.mine') == null) {
-          console.log("Congratulations! You win!")
-          if ((recordTime.innerhtml === "none") || (time.innerHTML < localStorage.getItem("highscore"))) {
-            localStorage.setItem("highscore", time.innerHTML)
+    
+          if (document.querySelector('.mine') == null) {
+            console.log("Congratulations! You win!")
+            if ((recordTime.innerhtml === "none") || (time.innerHTML < localStorage.getItem("highscore"))) {
+              localStorage.setItem("highscore", time.innerHTML)
+            }
+            recordTime.innerHTML = localStorage.getItem("highscore")
+          } else if (document.querySelector('.mine')) {
+            console.log("Sorry! You didn't find all the mines. Better luck next time!")
           }
-          recordTime.innerHTML = localStorage.getItem("highscore")
-        } else if (document.querySelector('.mine')) {
-          console.log("Sorry! You didn't find all the mines. Better luck next time!")
-        }
-      }, 300)
+        }, 300)
+      }
+    } else if (squareMarked.classList.contains('mine-marker')) {
+      squareMarked.removeAttribute('class')
+      squareMarked.setAttribute('class','square')
+      markersPlaced -= 1
+      numMarked.innerHTML = `${markersPlaced} / ${allMarkers}`
     }
-  } else if (squareMarked.classList.contains('mine-marker')) {
-    squareMarked.removeAttribute('class')
-    squareMarked.setAttribute('class','square')
-    markersPlaced -= 1
-    numMarked.innerHTML = `${markersPlaced} / ${allMarkers}`
   }
 }
 
