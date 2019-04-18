@@ -186,6 +186,7 @@ function checkNeighbors() {
   let clickVal = clickId - 1
   console.log(clickId)
   let clicked = document.querySelector(`#sq${clickId}`)
+  clicked.removeEventListener('click', clickHandler)
   if (values[clickVal] === 'mine') {
     console.log('boom!')
     stopTimer();
@@ -193,17 +194,17 @@ function checkNeighbors() {
     clicked.setAttribute('class','mine');
   } else {
     let counter = 0;
-    if ((clickId >= numColumns) && (clickId % numColumns !== 1)) {
+    if ((clickId > numColumns) && (clickId % numColumns !== 1)) {
       if ((values[clickVal - numColumns - 1]) === "mine") {
         counter += 1;
       }
     }
-    if (clickId >= numColumns) {
+    if (clickId > numColumns) {
       if ((values[clickVal - numColumns]) === "mine") {
         counter += 1;
       }
     }
-    if ((clickId >= numColumns) && (clickId % numColumns !== 0)) {
+    if ((clickId > numColumns) && (clickId % numColumns !== 0)) {
       if ((values[clickVal - numColumns + 1]) === "mine") {
         counter += 1;
       }
@@ -238,13 +239,13 @@ function checkNeighbors() {
     clicked.appendChild(countText)
     switch (counter) {
       case 0:
-        if ((clickId >= numColumns) && (clickId % numColumns !== 1)) {
+        if ((clickId > numColumns) && (clickId % numColumns !== 1)) {
           clearQueue.push(clickId - numColumns - 1)
         }
-        if (clickId >= numColumns) {
+        if (clickId > numColumns) {
           clearQueue.push(clickId - numColumns)
         }
-        if ((clickId >= numColumns) && (clickId % numColumns !== 0)) {
+        if ((clickId > numColumns) && (clickId % numColumns !== 0)) {
           clearQueue.push(clickId - numColumns + 1)
         }
         if (clickId % numColumns !== 1) {
@@ -344,36 +345,41 @@ function clickHandler(evt) {
 function placeMarker(evt) {
   evt.preventDefault()
   let squareMarked = evt.target
-  squareMarked.removeAttribute('class')
-  squareMarked.setAttribute('class', 'mine-marker')
-  markersPlaced += 1;
-  numMarked.innerHTML = `${markersPlaced} / ${allMarkers}`
-  if (markersPlaced === allMarkers) {
-    stopTimer()
-    setTimeout(function() {
-      for (i = 0; i < (numRows * numColumns); i++) {
-        if (document.querySelector(`#sq${i + 1}`).classList.contains('square')) {
-          clearQueue.push(i+1)
-          checkNeighbors()
-          if (document.querySelector(`#sq${i + 1}`).classList.contains('mine')) {
-            console.log("You didn't find all the mines. Better luck next time!")
+  if (squareMarked.classList.contains('square')) {
+    squareMarked.removeAttribute('class')
+    squareMarked.setAttribute('class', 'mine-marker')
+    markersPlaced += 1;
+    numMarked.innerHTML = `${markersPlaced} / ${allMarkers}`
+    if (markersPlaced === allMarkers) {
+      stopTimer()
+      setTimeout(function() {
+        for (i = 0; i < (numRows * numColumns); i++) {
+          if (document.querySelector(`#sq${i + 1}`).classList.contains('square')) {
+            clearQueue.push(i+1)
+            checkNeighbors()
           }
         }
-      }
-
-      if (document.querySelector('.mine') == null) {
-        console.log("Congratulations! You win!")
-        if ((time.innerhtml === "none") || (time.innerHTML < localStorage.getItem("highscore"))) {
-          localStorage.setItem("highscore", time.innerHTML)
+  
+        if (document.querySelector('.mine') == null) {
+          console.log("Congratulations! You win!")
+          if ((recordTime.innerhtml === "none") || (time.innerHTML < localStorage.getItem("highscore"))) {
+            localStorage.setItem("highscore", time.innerHTML)
+          }
+          recordTime.innerHTML = localStorage.getItem("highscore")
+        } else if (document.querySelector('.mine')) {
+          console.log("Sorry! You didn't find all the mines. Better luck next time!")
         }
-        recordTime.innerHTML = localStorage.getItem("highscore")
-      }
-    }, 300)
-
+      }, 300)
+    }
+  } else if (squareMarked.classList.contains('mine-marker')) {
+    squareMarked.removeAttribute('class')
+    squareMarked.setAttribute('class','square')
+    markersPlaced -= 1
+    numMarked.innerHTML = `${markersPlaced} / ${allMarkers}`
   }
 }
 
 //To do: explosion function
 
-//This will ultimately be automated as part of the setup function
+//Initialize game on load
 createBoard();
