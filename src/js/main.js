@@ -192,6 +192,7 @@ function checkNeighbors() {
     stopTimer();
     clicked.removeAttribute('class');
     clicked.setAttribute('class','mine');
+    explode(clickId)
   } else {
     let counter = 0;
     if ((clickId > numColumns) && (clickId % numColumns !== 1)) {
@@ -382,6 +383,83 @@ function placeMarker(evt) {
 }
 
 //To do: explosion function
+function explode(bomb) {
+  let topVal = (bomb % numColumns)
+  let rowsAbove = Math.floor((bomb - topVal) / numColumns)
+  console.log(rowsAbove)
+  let rowsBelow = (numRows - rowsAbove - 1)
+  let thisSquare;
+  let columnsOut
+  for (i = 1; i <= Math.max(rowsAbove, rowsBelow); i++) {
+    //if row startVal > 0 || row endVal < finalSquare
+      //On row (i squares up) from center-i to center+i
+      for (j=0; j <= i; j++) {
+        //if first row of explosion is positive && left edge of explosion is on same row as directly above bomb
+        if (((bomb - (i * numColumns)) > 0) && Math.floor((bomb - 1 - (i * numColumns) - j) / numColumns) === Math.floor((bomb - 1 - (i * numColumns)) / numColumns)) {
+          thisSquare = document.querySelector(`#sq${(bomb - (i * numColumns) - j)}`)
+          console.log(thisSquare)
+          thisSquare.removeAttribute('class')
+          thisSquare.setAttribute('class','explosion')
+          thisSquare.innerHTML = ""
+        }
+        if (((bomb - (i * numColumns)) > 0) && Math.floor((bomb - 1 - (i * numColumns) + j) / numColumns) === Math.floor((bomb - 1 - (i * numColumns)) / numColumns)) {
+          thisSquare = document.querySelector(`#sq${(bomb - (i * numColumns) + j)}`)
+          console.log(thisSquare)
+          thisSquare.removeAttribute('class')
+          thisSquare.setAttribute('class','explosion')
+          thisSquare.innerHTML = ""
+        }
+        //From rows (i rows up - 1) to (i rows down - 1) on bomb - i && bomb + i
+        if ((Math.floor((bomb - 1 - j) / numColumns) === Math.floor((bomb - 1) / numColumns)) && ((bomb - j - (numColumns * j)) > 0) && (j > 0)) {
+          columnsOut = j
+          thisSquare = document.querySelector(`#sq${bomb - columnsOut - (j * numColumns)}`)
+          console.log(thisSquare)
+          thisSquare.removeAttribute('class')
+          thisSquare.setAttribute('class','explosion')
+          thisSquare.innerHTML = ""
+        }
+        if ((Math.floor((bomb - 1 + j) / numColumns) === Math.floor(bomb - 1 / numColumns)) && ((bomb + j - (numColumns * j)) > 0) && (j > 0)) {
+          columnsOut = j
+          thisSquare = document.querySelector(`#sq${bomb + columnsOut - (j * numColumns)}`)
+          console.log(thisSquare)
+          thisSquare.removeAttribute('class')
+          thisSquare.setAttribute('class','explosion')
+          thisSquare.innerHTML = ""
+        }
+        if ((Math.floor((bomb - 1 - j) / numColumns) === Math.floor((bomb - 1) / numColumns)) && ((bomb - j + (numColumns * j)) <= (numRows * numColumns)) && (j > 0)) {
+          columnsOut = j
+          thisSquare = document.querySelector(`#sq${bomb - columnsOut + (j * numColumns)}`)
+          console.log(thisSquare)
+          thisSquare.removeAttribute('class')
+          thisSquare.setAttribute('class','explosion')
+          thisSquare.innerHTML = ""
+        }
+        if ((Math.floor((bomb - 1 + j) / numColumns) === Math.floor((bomb - 1) / numColumns)) && ((bomb + j + (numColumns * j)) <= (numRows * numColumns)) && (j > 0)) {
+          columnsOut = j
+          thisSquare = document.querySelector(`#sq${bomb + columnsOut + (j * numColumns)}`)
+          console.log(thisSquare)
+          thisSquare.removeAttribute('class')
+          thisSquare.setAttribute('class','explosion')
+          thisSquare.innerHTML = ""
+        }
+      }
+      //On row (i squares down) from center-i to center+i
+      if (((bomb + (i * numColumns)) <= (numColumns * numRows)) && Math.floor((bomb - 1 + (i * numColumns) - j) / numColumns) === Math.floor((bomb - 1 + (i * numColumns)) / numColumns)) {
+        thisSquare = document.querySelector(`#sq${(bomb + (i * numColumns) - j)}`)
+        console.log(thisSquare)
+        thisSquare.removeAttribute('class')
+        thisSquare.setAttribute('class','explosion')
+        thisSquare.innerHTML = ""
+      }
+      if (((bomb - (i * numColumns)) > 0) && Math.floor((bomb - 1 - (i * numColumns) + j) / numColumns) === Math.floor((bomb - 1 - (i * numColumns)) / numColumns)) {
+        thisSquare = document.querySelector(`#sq${(bomb + (i * numColumns) + j)}`)
+        console.log(thisSquare)
+        thisSquare.removeAttribute('class')
+        thisSquare.setAttribute('class','explosion')
+        thisSquare.innerHTML = ""
+      }
+  }
+}
 
 //Initialize game on load
 createBoard();
