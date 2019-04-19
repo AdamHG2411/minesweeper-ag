@@ -221,7 +221,6 @@ function createBoard() {
       break;
 
     case 'Custom':
-      //To do: Custom sizing not working via customButton; only resetButton
       recordTime.innerHTML = "N/A";
       presetRows.style.display = 'none';
       customRows.style.display = 'block';
@@ -233,6 +232,7 @@ function createBoard() {
         evt.preventDefault();
         numRows = customRows.value;
         numColumns = customColumns.value;
+        createBoard();
       });
   }
 
@@ -687,7 +687,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64472" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50751" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
