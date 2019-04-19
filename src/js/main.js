@@ -91,7 +91,6 @@ function createBoard() {
       numColumns = 24;
       break;
     case 'Custom':
-    //To do: Custom sizing not working via customButton; only resetButton
       recordTime.innerHTML = "N/A"
       presetRows.style.display = 'none';
       customRows.style.display = 'block';
@@ -103,6 +102,7 @@ function createBoard() {
         evt.preventDefault()
         numRows = customRows.value;
         numColumns = customColumns.value;
+        createBoard()
       })
   }
   time.innerHTML = parseInt(0,10)
@@ -120,7 +120,6 @@ function createBoard() {
       newSquare.setAttribute('class',`square`)
       newSquare.setAttribute('id', `sq${(i * numColumns) + j + 1}`)
       newSquare.addEventListener('click', clickHandler);
-
     }
   }
 }
