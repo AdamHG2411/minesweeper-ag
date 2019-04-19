@@ -309,6 +309,16 @@ body {
       .instructions {
         color: #DDD;
         margin: 10px;
+        #winMessage {
+          color: #228C22;
+          font-weight: 800;
+          display: none;
+        }
+        #lossMessage {
+          color: orangered;
+          font-weight: 800;
+          display: none;
+        }
       }
     }
     footer {

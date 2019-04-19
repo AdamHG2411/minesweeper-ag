@@ -4,10 +4,7 @@ let numRows = 8;
 let numColumns = 8;
 let time = document.querySelector('#time')
 let recordTime = document.querySelector('#record-time')
-recordTime.innerHTML = 'none';
-if (localStorage.getItem("highscore") !== null) {
-  recordTime.innerHTML = localStorage.getItem("highscore")
-}
+recordTime.innerHTML = 'not set';
 let squaresCleared = 0;
 let numMarked = document.querySelector('#marked')
 let markersPlaced = NaN;
@@ -27,7 +24,6 @@ let customButton = document.querySelector('#createCustom')
 let reset = document.querySelector('#reset')
 reset.addEventListener('click', resetBoard)
 let indicatorArrow = document.querySelector('#indicatorArrow')
-indicatorArrow.setAttribute('class','clickReveal')
 let clickActions = document.querySelector('#clickActions')
 clickActions.addEventListener('click',clickAction)
 let currentTime;
@@ -42,11 +38,18 @@ function createBoard() {
     }
     allRows.removeChild(allRows.firstChild)
   }
+  document.querySelector('#winMessage').style.display = "none"
+  document.querySelector('#lossMessage').style.display = "none"
   values = [];
   finalValues = [];
   squaresCleared = 0;
+  indicatorArrow.removeAttribute('class')
+  indicatorArrow.setAttribute('class','clickReveal')
   switch (gridSelector.value) {
     case 'Small':
+      if (localStorage.getItem("smallScore") !== null) {
+        recordTime.innerHTML = localStorage.getItem("smallScore")
+      }
       presetRows.style.display = 'inline';
       presetRows.innerHTML = '8'
       presetColumns.style.display = 'inline';
@@ -58,6 +61,9 @@ function createBoard() {
       numColumns = 8;
       break;
     case 'Medium':
+      if (localStorage.getItem("medScore") !== null) {
+        recordTime.innerHTML = localStorage.getItem("medScore")
+      } else {recordTime.innerHTML = 'not set'}
       presetRows.style.display = 'inline';
       presetRows.innerHTML = '16'
       presetColumns.style.display = 'inline';
@@ -69,6 +75,11 @@ function createBoard() {
       numColumns = 16;
       break;
     case 'Large':
+      if (localStorage.getItem("largeScore") !== null) {
+        recordTime.innerHTML = localStorage.getItem("largeScore")
+      } else {
+        recordTime.innerHTML = "not set"
+      }
       presetRows.style.display = 'inline';
       presetRows.innerHTML = '24';
       presetColumns.style.display = 'inline';
@@ -81,6 +92,7 @@ function createBoard() {
       break;
     case 'Custom':
     //To do: Custom sizing not working via customButton; only resetButton
+      recordTime.innerHTML = "N/A"
       presetRows.style.display = 'none';
       customRows.style.display = 'block';
       presetColumns.style.display = 'none';
@@ -354,24 +366,35 @@ function placeMarker(evt) {
       numMarked.innerHTML = `${markersPlaced} / ${allMarkers}`
       if (markersPlaced === allMarkers) {
         stopTimer()
-        setTimeout(function() {
-          for (i = 0; i < (numRows * numColumns); i++) {
-            if (document.querySelector(`#sq${i + 1}`).classList.contains('square')) {
-              clearQueue.push(i+1)
-              checkNeighbors()
+        for (i = 0; i < (numRows * numColumns); i++) {
+          if (document.querySelector(`#sq${i + 1}`).classList.contains('square')) {
+            clearQueue.push(i+1)
+            checkNeighbors()
+          }
+        }
+        if (document.querySelector('.mine') == null) {
+          console.log("Congratulations! You win!")
+          document.querySelector('#winMessage').style.display = "block"
+          if ((recordTime.innerHTML === "not set") || (recordTime.innerHTML === "N/A") || (parseInt(time.innerHTML,10) < parseInt(recordTime.innerHTML,10))) {
+            switch (gridSelector.value) {
+              case 'Small':
+                localStorage.setItem("smallScore", time.innerHTML)
+                recordTime.innerHTML = localStorage.getItem("smallScore")
+                break;
+              case 'Medium':
+                localStorage.setItem("mediumScore", time.innerHTML)
+                recordTime.innerHTML = localStorage.getItem("mediumScore")
+                break;
+              case 'Large':
+                localStorage.setItem("largeScore", time.innerHTML)
+                recordTime.innerHTML = localStorage.getItem("largeScore")
+                break;
             }
           }
-    
-          if (document.querySelector('.mine') == null) {
-            console.log("Congratulations! You win!")
-            if ((recordTime.innerhtml === "none") || (time.innerHTML < localStorage.getItem("highscore"))) {
-              localStorage.setItem("highscore", time.innerHTML)
-            }
-            recordTime.innerHTML = localStorage.getItem("highscore")
-          } else if (document.querySelector('.mine')) {
-            console.log("Sorry! You didn't find all the mines. Better luck next time!")
-          }
-        }, 300)
+        } else if (document.querySelector('.mine')) {
+          console.log("Sorry! You didn't find all the mines. Better luck next time!")
+          document.querySelector('#lossMessage').style.display = "block"
+        }
       }
     } else if (squareMarked.classList.contains('mine-marker')) {
       squareMarked.removeAttribute('class')
@@ -388,30 +411,42 @@ function explode(bomb) {
   setTimeout(function explode() {
     for (i = -1; i < 2; i++) {
       thisSquare = document.querySelector(`#sq${bomb-numColumns+i}`)
-      thisSquare.setAttribute('class', 'explosion')
+      if (Math.floor((bomb-numColumns+i-1) / numColumns) === Math.floor((bomb-numColumns-1) / numColumns)) {
+        thisSquare.setAttribute('class', 'explosion')
+      }
     }
     for (i = -1; i < 2; i=i+2) {
       thisSquare = document.querySelector(`#sq${bomb+i}`)
-      thisSquare.setAttribute('class', 'explosion')
+      if (Math.floor((bomb+i-1) / numColumns) === Math.floor((bomb-1) / numColumns)) {
+        thisSquare.setAttribute('class', 'explosion')
+      }
     }
     for (i = -1; i < 2; i++) {
       thisSquare = document.querySelector(`#sq${bomb+numColumns+i}`)
-      thisSquare.setAttribute('class', 'explosion')
+      if (Math.floor((bomb+numColumns+i-1) / numColumns) === Math.floor((bomb+numColumns-1) / numColumns)) {
+        thisSquare.setAttribute('class', 'explosion')
+      }
     }
   }, 333)
   setTimeout(function() {
     for (i = -1; i < 2; i++) {
       thisSquare = document.querySelector(`#sq${bomb-numColumns+i}`)
-      thisSquare.setAttribute('class', 'aflame')
+      if (Math.floor((bomb-numColumns+i-1) / numColumns) === Math.floor((bomb-numColumns-1) / numColumns)) {
+        thisSquare.setAttribute('class', 'aflame')
+      }
     }
     for (i = -1; i < 2; i=i+2) {
       thisSquare = document.querySelector(`#sq${bomb+i}`)
-      thisSquare.setAttribute('class', 'aflame')
+      if (Math.floor((bomb+i-1) / numColumns) === Math.floor((bomb-1) / numColumns)) {
+        thisSquare.setAttribute('class', 'aflame')
+      }
     }
     for (i = -1; i < 2; i++) {
       thisSquare = document.querySelector(`#sq${bomb+numColumns+i}`)
-      thisSquare.setAttribute('class', 'aflame')
-    }  
+      if (Math.floor((bomb+numColumns+i-1) / numColumns) === Math.floor((bomb+numColumns-1) / numColumns)) {
+        thisSquare.setAttribute('class', 'aflame')
+      }
+    }
   }, 667)
   setTimeout(function() {
     for (i = 1; i <= (numColumns * numRows); i++) {
@@ -422,6 +457,7 @@ function explode(bomb) {
       }
     }
   }, 1000)
+  document.querySelector('#lossMessage').style.display = "block"
 }
 //Initialize game on load
 createBoard();
