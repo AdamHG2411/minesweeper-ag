@@ -40,7 +40,6 @@
 .wrapper header .scoring .timer #timer-img {
   width: 40px;
   height: 40px;
-  border: 1px solid black;
   margin: 0 auto;
 }
 .wrapper header .scoring .timer #time {
@@ -58,7 +57,7 @@
 .wrapper header .scoring .markers #marker-img {
   width: 40px;
   height: 40px;
-  border: 1px solid black;
+  border: 1px solid #222;
   margin: 0 auto;
 }
 .wrapper header .scoring .markers #marked {
@@ -76,7 +75,6 @@
 .wrapper header .scoring .best-time #record {
   height: 40px;
   width: 40px;
-  border: 1px solid black;
   margin: 0 auto;
 }
 .wrapper header .scoring .best-time #record-time {
