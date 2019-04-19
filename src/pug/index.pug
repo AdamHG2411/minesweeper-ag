@@ -34,8 +34,8 @@ html(lang="en")
           select#gridSelector(name="Size")
             option(value="Small" Default) Small
             option(value="Medium") Medium
-            option(value="Large") Large
-            option(value="Custom") Custom
+            option#largeGrid(value="Large") Large
+            option#customGrid(value="Custom") Custom
           Button#reset Reset
           #numRows
             p Rows: 
