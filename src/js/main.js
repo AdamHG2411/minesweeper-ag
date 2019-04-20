@@ -43,6 +43,7 @@ function createBoard() {
   values = [];
   finalValues = [];
   squaresCleared = 0;
+  stopTimer();
   indicatorArrow.removeAttribute('class')
   indicatorArrow.setAttribute('class','clickReveal')
   switch (gridSelector.value) {
